@@ -13,26 +13,18 @@ namespace StudentTable
         string surname;  // Фамилия
         string name;  // Имя
         string sName;  // Отчество
-        int bDateD;  // Число ДР
-        int bDateM;  //  Месяц ДР
-        int bDateY;  // Год ДР
         string gender;  // Пол
         int s_number;  // № студенческого билета
         string l_base;  // основа обучения
         int? debts;  // количество задолженностей
-        int note;  // примечание
+        string note;  // примечание
         DateTime bDate;
-        public bool IsFull { get; set; }
         public string Surname
         {
             get { return surname; }
             set 
             {
-                if ((value == String.Empty) || (!Regex.IsMatch(value, @"^[a-zA-Zа-яА-Я]+$")))
-                {
-                    MessageBox.Show("Введите корректное имя");
-                }
-              else surname = value; 
+                surname = value; 
             }
         }// Фамилия
     
@@ -41,11 +33,8 @@ namespace StudentTable
             get { return name; }
             set
             {
-                if ((value == String.Empty) || (!Regex.IsMatch(value, @"^[a-zA-Zа-яА-Я]+$")))
-                {
-                    MessageBox.Show("Введите корректную фамилию");
-                }
-                else name = value;
+               
+              name = value;
             }
         }    
             // Имя
@@ -54,16 +43,9 @@ namespace StudentTable
             get { return sName; }
             set
             {
-                if ((value == String.Empty) || (!Regex.IsMatch(value, @"^[a-zA-Zа-яА-Я]+$")))
-                {
-                    MessageBox.Show("Введите корректное отчество");
-                }
-                else sName = value;
+             sName = value;
             }
         }// Отчество
-        public int BDateD;  // Число ДР
-        public int BDateM;  //  Месяц ДР
-        public int BDateY;  // Год ДР
        public DateTime BDate
         {
             get { return bDate; }
@@ -79,11 +61,7 @@ namespace StudentTable
               get { return s_number; }
             set
             {
-                if (!Regex.IsMatch(value.ToString(), @"^[0-9]+$"))
-                {
-                    MessageBox.Show("Введите корректный табельный номер");
-                }
-                else s_number = value;
+              s_number = value;
             }
         }
         // № студенческого билета
@@ -100,10 +78,11 @@ namespace StudentTable
             get { return debts; }
             set
             {
-                debts = value;
+                if (value == null) debts = 0;
+                else debts = value;
             }
         }// количество задолженностей
-        public int Note
+        public string Note
         {
             get { return note; }
             set { note = value; }

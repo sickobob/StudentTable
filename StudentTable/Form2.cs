@@ -12,9 +12,19 @@ namespace StudentTable
 {
     public partial class Form2 : Form
     {
+        List<Student> students;
         public Form2()
         {
+            
             InitializeComponent();
+        
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            Form1 frm = Owner as Form1;
+            Text = "Список группы";
+         
         }
     }
 }
