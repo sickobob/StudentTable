@@ -16,5 +16,16 @@ namespace StudentTable
         {
             InitializeComponent();
         }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+            Form1 frm = Owner as Form1;
+            Text = "Обработанные данные";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

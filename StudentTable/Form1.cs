@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,6 +23,7 @@ namespace StudentTable
         }
         public List<Student> Students = new List<Student>();
         Form2 frm2;
+        Form3 frm3;
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
@@ -61,8 +63,15 @@ namespace StudentTable
                     student.S_number = Convert.ToInt16(textBox4.Text);
                     student.L_base = comboBox2.Text;
                     student.Note = textBox6.Text;
-                    student.Debts = Convert.ToInt16(textBox5.Text);
-
+                    try
+                    {
+                        student.Debts = Convert.ToInt16(textBox5.Text);
+                    }
+                    catch 
+                    {
+                        student.Debts = 0;
+                    }
+                  
                     Students.Add(student);
                     label10.Text = $"Количество записей: {Students.Count}";
                     tabNums.Add(int.Parse(textBox4.Text));
@@ -94,6 +103,7 @@ namespace StudentTable
         /// <returns></returns>
         bool CheckDebts(TextBox textBox)
         {
+            if (String.IsNullOrEmpty(textBox.Text)) return true;
             if (!int.TryParse(textBox.Text, out int b))
             {
                 MessageBox.Show("Введите корректное число долгов");
@@ -144,15 +154,69 @@ namespace StudentTable
             Text = "Терешкин Алексей Александрович ЭПБ-211";
             frm2 = new Form2();
             frm2.Owner = this;
+            frm3 = new Form3();
+            frm3.Owner = this;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            frm2.dataGridView1.DataSource = Students;
-            frm2.dataGridView1.Columns[0].HeaderText = "ФИО";
-
+            frm2.dataGridView1.AllowUserToAddRows = false;
+            
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("ФИО", typeof(string));
+            dataTable.Columns.Add("№ Студенческого ", typeof(string));
+            dataTable.Columns.Add("Пол", typeof(string));
+            dataTable.Columns.Add("Дата рождения", typeof(DateTime));
+            dataTable.Columns.Add("Задолжности", typeof(int));
+            dataTable.Columns.Add("Основа Обучения", typeof(string));
+            dataTable.Columns.Add("Примечание", typeof (string));
+            for (int i = 0; i < Students.Count; i++)
+            {
+                string fio = Students[i].Surname + " " + Students[i].Name+" "+ Students[i].SName;
+                dataTable.Rows.Add(fio, Students[i].S_number, Students[i].Gender, Students[i].BDate, Students[i].Debts, Students[i].L_base, Students[i].Note);
+            }
+            frm2.dataGridView1.DataSource = dataTable;
             frm2.ShowDialog();
             
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            frm3.dataGridView1.AllowUserToAddRows = false;
+            List<Student> sortedStudents = new List<Student>();
+            sortedStudents = SortStudents(Students);
+            
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("ФИО", typeof(string));
+            dataTable.Columns.Add("№ Студенческого ", typeof(string));
+            dataTable.Columns.Add("Пол", typeof(string));
+            dataTable.Columns.Add("Дата рождения", typeof(DateTime));
+            dataTable.Columns.Add("Задолжности", typeof(int));
+            dataTable.Columns.Add("Основа Обучения", typeof(string));
+            dataTable.Columns.Add("Примечание", typeof(string));
+            for (int i = 0; i < sortedStudents.Count; i++)
+            {
+                string fio = Students[i].Surname + " " + Students[i].Name + " " + Students[i].SName;
+                dataTable.Rows.Add(fio, Students[i].S_number, Students[i].Gender, Students[i].BDate, Students[i].Debts, Students[i].L_base, Students[i].Note);
+            }
+            frm3.dataGridView1.DataSource = dataTable;
+            frm3.ShowDialog();
+        }
+        List<Student> SortStudents(List<Student> students)
+        {
+            List<Student> result = new List<Student>(); 
+            result = (List<Student>)(from student in students 
+                     orderby student.S_number descending
+                     select student);
+            foreach (var student in students)
+            {
+                if (student.Gender == "мужской")
+                {
+                   result.Add(student); 
+                }
+
+            }
+            return result;
         }
     }
 }
