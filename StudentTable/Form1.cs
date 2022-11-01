@@ -205,10 +205,11 @@ namespace StudentTable
         List<Student> SortStudents(List<Student> students)
         {
             List<Student> result = new List<Student>(); 
-            result = (List<Student>)(from student in students 
-                     orderby student.S_number descending
-                     select student);
-            foreach (var student in students)
+            var m = from student in students 
+                     orderby student.S_number
+                     select student;
+            
+            foreach (var student in m.Reverse())
             {
                 if (student.Gender == "мужской")
                 {
