@@ -78,7 +78,7 @@ namespace StudentTable
             get { return debts; }
             set
             {
-                debts = 0;
+                debts = value;
             }
         }// количество задолженностей
         public string Note

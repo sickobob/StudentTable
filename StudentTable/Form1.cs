@@ -47,14 +47,12 @@ namespace StudentTable
 
         private void button1_Click(object sender, EventArgs e)
         {
-           if(CheckInitials(textBox1,textBox2,textBox3) && CheckComboBoxes(comboBox1, comboBox2) && CheckDate(dateTimePicker1) && CheckTabNum(textBox4)&&CheckDebts(textBox5))
+           if(CheckInitials(textBox1,textBox2,textBox3) && CheckComboBoxes(comboBox1, comboBox2) && CheckDate(dateTimePicker1) && CheckTabNum(textBox4))
             {
                 if (tabNums.Contains(int.Parse(textBox4.Text))) MessageBox.Show("Табельный номер уже есть в базе");
                 else
                 {
                     Student student = new();
-
-
                     student.Surname = textBox1.Text;
                     student.Name = textBox2.Text;
                     student.SName = textBox3.Text;
@@ -63,15 +61,6 @@ namespace StudentTable
                     student.S_number = Convert.ToInt16(textBox4.Text);
                     student.L_base = comboBox2.Text;
                     student.Note = textBox6.Text;
-                    try
-                    {
-                        student.Debts = Convert.ToInt16(textBox5.Text);
-                    }
-                    catch 
-                    {
-                        student.Debts = 0;
-                    }
-                  
                     Students.Add(student);
                     label10.Text = $"Количество записей: {Students.Count}";
                     tabNums.Add(int.Parse(textBox4.Text));
@@ -101,16 +90,16 @@ namespace StudentTable
         /// </summary>
         /// <param name="textBox"></param>
         /// <returns></returns>
-        bool CheckDebts(TextBox textBox)
-        {
-            if (String.IsNullOrEmpty(textBox.Text)) return true;
-            if (!int.TryParse(textBox.Text, out int b))
-            {
-                MessageBox.Show("Введите корректное число долгов");
-                return false;
-            }
-            else return true;
-        }
+        //bool CheckDebts(TextBox textBox)
+        //{
+        //    if (String.IsNullOrEmpty(textBox.Text)) return true;
+        //    if (!int.TryParse(textBox.Text, out int b))
+        //    {
+        //        MessageBox.Show("Введите корректное число долгов");
+        //        return false;
+        //    }
+        //    else return true;
+        //}
         /// <summary>
         /// Проверяет правильность заполнения полей с выбором ответа
         /// </summary>
@@ -151,11 +140,50 @@ namespace StudentTable
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Student student = new Student();
+            student.Name = "Alexey";
+            student.Surname = "Tereshkin";
+            student.SName = "al";
+            student.S_number = 111;
+            student.BDate = DateTime.Now;
+            student.Gender = "мужской";
+            student.Debts = 0;
+            Students.Add(student);
+            Student student1 = new Student();
+            student1.Name = "Alexey";
+            student1.Surname = "Tereshkin";
+            student1.SName = "al";
+            student1.S_number = 1112;
+            student1.BDate = DateTime.Now;
+            student1.Gender = "женский";
+            student1.Debts = 0;
+            Students.Add(student1);
+            Student student2 = new Student();
+            student2.Name = "Alexey";
+            student2.Surname = "Tereshkin";
+            student2.SName = "al";
+            student2.S_number = 1113;
+            student2.BDate = DateTime.Now;
+            student2.Gender = "мужской";
+            student2.Debts = 0;
+            Students.Add(student2);
+            Student student3 = new Student();
+            student3.Name = "Alexey";
+            student3.Surname = "Tereshkin";
+            student3.SName = "al";
+            student3.S_number = 1114;
+            student3.BDate = DateTime.Now;
+            student3.Gender = "мужской";
+            student3.Debts = 0;
+            Students.Add(student3);
             Text = "Терешкин Алексей Александрович ЭПБ-211";
             frm2 = new Form2();
             frm2.Owner = this;
             frm3 = new Form3();
             frm3.Owner = this;
+          
+
+
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -184,32 +212,36 @@ namespace StudentTable
         {
             frm3.dataGridView1.AllowUserToAddRows = false;
             List<Student> sortedStudents = new List<Student>();
-            sortedStudents = SortStudents(Students);
+            sortedStudents = SortStudents();
             
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("ФИО", typeof(string));
-            dataTable.Columns.Add("№ Студенческого ", typeof(string));
+            dataTable.Columns.Add("№ Студенческого", typeof(string));
             dataTable.Columns.Add("Пол", typeof(string));
             dataTable.Columns.Add("Дата рождения", typeof(DateTime));
             dataTable.Columns.Add("Задолжности", typeof(int));
             dataTable.Columns.Add("Основа Обучения", typeof(string));
             dataTable.Columns.Add("Примечание", typeof(string));
+           
+           
             for (int i = 0; i < sortedStudents.Count; i++)
             {
-                string fio = Students[i].Surname + " " + Students[i].Name + " " + Students[i].SName;
-                dataTable.Rows.Add(fio, Students[i].S_number, Students[i].Gender, Students[i].BDate, Students[i].Debts, Students[i].L_base, Students[i].Note);
+                string fio = sortedStudents[i].Surname + " " + sortedStudents[i].Name + " " + sortedStudents[i].SName;
+                dataTable.Rows.Add(fio, sortedStudents[i].S_number, sortedStudents[i].Gender, sortedStudents[i].BDate, sortedStudents[i].Debts, sortedStudents[i].L_base, sortedStudents[i].Note);
             }
+           
             frm3.dataGridView1.DataSource = dataTable;
+      
             frm3.ShowDialog();
         }
-        List<Student> SortStudents(List<Student> students)
+        List<Student> SortStudents()
         {
             List<Student> result = new List<Student>(); 
-            var m = from student in students 
-                     orderby student.S_number
-                     select student;
+           
+           Students = Students.OrderByDescending(student => student.S_number).ToList();
+      
             
-            foreach (var student in m.Reverse())
+            foreach (var student in Students)
             {
                 if (student.Gender == "мужской")
                 {
